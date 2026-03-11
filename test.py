@@ -36,7 +36,14 @@ fileInput = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG\DICOM"
 ## Get the number of .dcm files inside the DICOM folder
 files = os.listdir(fileInput)
 
-print(len(files))
+for file in files:
+    print(file)
+
+# for number in range(len(files)):
+#     fullDir = os.path.join(fileInput, number)
+
+
+# print(len(files))
 
 
 # ds = pydicom.dcmread(input)
