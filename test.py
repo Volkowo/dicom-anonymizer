@@ -31,29 +31,31 @@ anonymizeKeyword = [
     "PerformedProcedureStepDescription",
 ]
 
-fileInput = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG\DICOM"
+source = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG"
+destination = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG_ANON"
 
-## Get the number of .dcm files inside the DICOM folder
-files = os.listdir(fileInput)
+## Copy source if destination hasn't exist yet
+if not os.path.exists(destination):
+    shutil.copytree(source, destination)
+
+## Get the directory for DICOM file
+dicomDir = os.path.join(destination, "DICOM")
+
+## Get the files that's inside the dicomDir file
+files = os.listdir(dicomDir)
 
 for file in files:
-    print(file)
+    fullDir = os.path.join(dicomDir, file)
 
-# for number in range(len(files)):
-#     fullDir = os.path.join(fileInput, number)
+    if not os.path.isfile(fullDir):
+        print(f"{fullDir} is not a valid path!")
+        continue
 
+    ds = pydicom.dcmread(fullDir);
+    
+    for elem in ds:
+        if elem.keyword in anonymizeKeyword:
+            elem.value = ""
+    ds.remove_private_tags()
 
-# print(len(files))
-
-
-# ds = pydicom.dcmread(input)
-
-# # print(ds)
-
-# for elem in ds:
-#     if elem.keyword in anonymizeKeyword:
-#         print("BEFORE ANON:", elem.keyword, "=", elem.value)
-#         elem.value = ""
-#         print("AFTER ANON:", elem.keyword, "=", elem.value)
-# print(ds.PatientID)
-# print(ds.PatientBirthDate)
+    ds.save_as(fullDir)
