@@ -31,14 +31,25 @@ anonymizeKeyword = [
     "PerformedProcedureStepDescription",
 ]
 
-# source = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG"
-# destination = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG_ANON"
+def getPaths():
+    source = input("Enter the source directory (no need to include the DICOM folder): ")
+    parent = input("Enter the parent directory where the anonymized dataset will be saved: ")
+    folder = input("Enter the name for the anonymized dataset folder: ")
+
+    destination = os.path.join(parent, folder)
+
+    return source, destination
 
 def main():
     source, destination = getPaths()
-    ## Copy source if destination hasn't exist yet
+
+    # Copy source if destination hasn't exist yet
     if not os.path.exists(destination):
         shutil.copytree(source, destination)
+    # print an error if the destiantion already exists
+    else:
+        print("Destination folder already exists. Please choose another one.")
+        return
 
     ## Get the directory for DICOM file
     dicDir = os.path.join(destination, "DICOM")
@@ -71,17 +82,5 @@ def main():
             # The original files usually do not have extension in them, so this if statement removes any of the extension-less files.
             if outputPath != fullDir:
                 os.remove(fullDir)
-
-def getPaths():
-    source = input("Enter the source directory (no need to include the DICOM folder): ")
-    parent = input("Enter the parent directory where the anonymized dataset will be saved: ")
-    folder = input("Enter the name for the anonymized dataset folder: ")
-
-    destination = os.path.join(parent, folder)
-
-    # only create the folder if it hasn't been created yet
-    os.makedirs(destination, exist_ok=True)
-
-    return source, destination
 
 main();
