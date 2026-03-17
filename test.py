@@ -34,29 +34,38 @@ anonymizeKeyword = [
 source = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG"
 destination = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG_ANON"
 
-## Copy source if destination hasn't exist yet
-if not os.path.exists(destination):
-    shutil.copytree(source, destination)
+def copy():
+    ## Copy source if destination hasn't exist yet
+    if not os.path.exists(destination):
+        shutil.copytree(source, destination)
 
-## Get the directory for DICOM file
-dicDir = os.path.join(destination, "DICOM")
+    ## Get the directory for DICOM file
+    dicDir = os.path.join(source, "DICOM")
 
-## Get the files that's inside the dicDir file
-files = os.listdir(dicDir)
+    for (root, dirs, files) in os.walk(dicDir):
+        print(f"Directory Path: {root}")
+        print(f"Directory Names: {dirs}")
+        print(f"File Names: {files}")
 
-for file in files:
-    fullDir = os.path.join(dicDir, file)
+    # for file in files:
+    #     fullDir = os.path.join(dicDir, file)
 
-    if not os.path.isfile(fullDir):
-        print(f"{fullDir} is not a valid path!")
-        continue
+    #     if not os.path.isfile(fullDir):
+    #         print(f"{fullDir} is not a valid path!")
+    #         continue
 
-    ds = pydicom.dcmread(fullDir);
-    
-    for elem in ds:
-        if elem.keyword in anonymizeKeyword:
-            elem.value = ""
-    ds.remove_private_tags()
+    #     ds = pydicom.dcmread(fullDir);
+        
+    #     for elem in ds:
+    #         if elem.keyword in anonymizeKeyword:
+    #             elem.value = ""
+    #     ds.remove_private_tags()
 
-    outputPath = os.path.join(dicDir, f"{file}.dcm")
-    ds.save_as(outputPath, enforce_file_format=True)
+    #     outputPath = os.path.join(dicDir, f"{file}.dcm")
+    #     ds.save_as(outputPath, enforce_file_format=True)
+
+def main():
+    x = input("Enter source file: ")
+    print("SOURCE: ", x)
+
+copy();
