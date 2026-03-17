@@ -31,10 +31,11 @@ anonymizeKeyword = [
     "PerformedProcedureStepDescription",
 ]
 
-source = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG"
-destination = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG_ANON"
+# source = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG"
+# destination = r"D:\VIDEO PROJECT CUS SIZE BIG\MRI - HG_ANON"
 
-def copy():
+def main():
+    source, destination = getPaths()
     ## Copy source if destination hasn't exist yet
     if not os.path.exists(destination):
         shutil.copytree(source, destination)
@@ -71,8 +72,16 @@ def copy():
             if outputPath != fullDir:
                 os.remove(fullDir)
 
-def main():
-    x = input("Enter source file (No need to include DICOM folder): ")
-    print("SOURCE: ", x)
+def getPaths():
+    source = input("Enter the source directory (no need to include the DICOM folder): ")
+    parent = input("Enter the parent directory where the anonymized dataset will be saved: ")
+    folder = input("Enter the name for the anonymized dataset folder: ")
+
+    destination = os.path.join(parent, folder)
+
+    # only create the folder if it hasn't been created yet
+    os.makedirs(destination, exist_ok=True)
+
+    return source, destination
 
 main();
