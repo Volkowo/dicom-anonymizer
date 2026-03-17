@@ -40,32 +40,39 @@ def copy():
         shutil.copytree(source, destination)
 
     ## Get the directory for DICOM file
-    dicDir = os.path.join(source, "DICOM")
+    dicDir = os.path.join(destination, "DICOM")
 
     for (root, dirs, files) in os.walk(dicDir):
-        print(f"Directory Path: {root}")
-        print(f"Directory Names: {dirs}")
-        print(f"File Names: {files}")
+        for file in files:
+            fullDir = os.path.join(root, file)
 
-    # for file in files:
-    #     fullDir = os.path.join(dicDir, file)
-
-    #     if not os.path.isfile(fullDir):
-    #         print(f"{fullDir} is not a valid path!")
-    #         continue
-
-    #     ds = pydicom.dcmread(fullDir);
+            # Checks if the directory is valid or not
+            try:
+                ds = pydicom.dcmread(fullDir)
+            except pydicom.errors.InvalidDicomError:
+                print(f"{fullDir} is not a valid path!")
+                continue
         
-    #     for elem in ds:
-    #         if elem.keyword in anonymizeKeyword:
-    #             elem.value = ""
-    #     ds.remove_private_tags()
+            # Anonymizes the value that are in the anonymizeKeyword array
+            for elem in ds:
+                if elem.keyword in anonymizeKeyword:
+                    elem.value = ""
 
-    #     outputPath = os.path.join(dicDir, f"{file}.dcm")
-    #     ds.save_as(outputPath, enforce_file_format=True)
+            # Remove any private tags
+            ds.remove_private_tags()
+
+            # Separates the file from it's extension (if it exists)
+            name, extension = os.path.splitext(file)
+
+            outputPath = os.path.join(root, f"{name}.dcm")
+            ds.save_as(outputPath, enforce_file_format=True)
+            
+            # The original files usually do not have extension in them, so this if statement removes any of the extension-less files.
+            if outputPath != fullDir:
+                os.remove(fullDir)
 
 def main():
-    x = input("Enter source file: ")
+    x = input("Enter source file (No need to include DICOM folder): ")
     print("SOURCE: ", x)
 
-copy();
+main();
