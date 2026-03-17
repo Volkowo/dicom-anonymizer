@@ -32,6 +32,7 @@ anonymizeKeyword = [
     "PerformedProcedureStepDescription",
 ]
 
+# Prompts the user for the source dataset and the destination folder
 def getPaths():
     source = input("Enter the source directory (no need to include the DICOM folder): ")
     parent = input("Enter the parent directory where the anonymized dataset will be saved: ")
@@ -40,6 +41,7 @@ def getPaths():
 
     return source, destination
 
+# Copies the entire dataset from the source directory to the destination directory
 def copyFiles(sourceDir, destinationDir):
     # Copy source if destination hasn't exist yet
     if not os.path.exists(destinationDir):
@@ -50,6 +52,7 @@ def copyFiles(sourceDir, destinationDir):
         print("Destination folder already exists. Please choose another one.")
         return False
 
+# Walks through all files inside the DICOM folder and anonymizes metadata
 def anonymizeFile(dicomFolderDir):
     for (root, dirs, files) in os.walk(dicomFolderDir):
         for file in files:
@@ -71,7 +74,7 @@ def anonymizeFile(dicomFolderDir):
             ds.remove_private_tags()
 
             # Separates the file from it's extension (if it exists)
-            name, extension = os.path.splitext(file)
+            name, _ = os.path.splitext(file)
 
             outputPath = os.path.join(root, f"{name}.dcm")
             ds.save_as(outputPath, enforce_file_format=True)
