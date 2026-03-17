@@ -39,13 +39,13 @@ if not os.path.exists(destination):
     shutil.copytree(source, destination)
 
 ## Get the directory for DICOM file
-dicomDir = os.path.join(destination, "DICOM")
+dicDir = os.path.join(destination, "DICOM")
 
-## Get the files that's inside the dicomDir file
-files = os.listdir(dicomDir)
+## Get the files that's inside the dicDir file
+files = os.listdir(dicDir)
 
 for file in files:
-    fullDir = os.path.join(dicomDir, file)
+    fullDir = os.path.join(dicDir, file)
 
     if not os.path.isfile(fullDir):
         print(f"{fullDir} is not a valid path!")
@@ -58,4 +58,5 @@ for file in files:
             elem.value = ""
     ds.remove_private_tags()
 
-    ds.save_as(fullDir)
+    outputPath = os.path.join(dicDir, f"{file}.dcm")
+    ds.save_as(outputPath, enforce_file_format=True)
