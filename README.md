@@ -75,7 +75,7 @@ pip install pydicom
 Run the script and provide the requested directories:
 
 ```bash
-pip install pydicom
+python anonymize_dicom.py
 ```
 
 You will be prompted for:
