@@ -3,6 +3,7 @@ import os
 import shutil
 from pydicom.uid import generate_uid
 
+# List of "variables" in a DICOM file that should be anonymized
 anonymizeKeyword = [
     "PatientName",
     "PatientID",
@@ -35,26 +36,22 @@ def getPaths():
     source = input("Enter the source directory (no need to include the DICOM folder): ")
     parent = input("Enter the parent directory where the anonymized dataset will be saved: ")
     folder = input("Enter the name for the anonymized dataset folder: ")
-
     destination = os.path.join(parent, folder)
 
     return source, destination
 
-def main():
-    source, destination = getPaths()
-
+def copyFiles(sourceDir, destinationDir):
     # Copy source if destination hasn't exist yet
-    if not os.path.exists(destination):
-        shutil.copytree(source, destination)
+    if not os.path.exists(destinationDir):
+        shutil.copytree(sourceDir, destinationDir)
+        return True
     # print an error if the destiantion already exists
     else:
         print("Destination folder already exists. Please choose another one.")
-        return
+        return False
 
-    ## Get the directory for DICOM file
-    dicDir = os.path.join(destination, "DICOM")
-
-    for (root, dirs, files) in os.walk(dicDir):
+def anonymizeFile(dicomFolderDir):
+    for (root, dirs, files) in os.walk(dicomFolderDir):
         for file in files:
             fullDir = os.path.join(root, file)
 
@@ -82,5 +79,16 @@ def main():
             # The original files usually do not have extension in them, so this if statement removes any of the extension-less files.
             if outputPath != fullDir:
                 os.remove(fullDir)
+
+def main():
+    source, destination = getPaths()
+    copied = copyFiles(source, destination)
+
+    if not copied:
+        return
+    
+    # Get the directory for DICOM file
+    dicDir = os.path.join(destination, "DICOM")
+    anonymizeFile(dicDir)
 
 main();
