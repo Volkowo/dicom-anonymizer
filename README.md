@@ -5,8 +5,7 @@ This Python script anonymizes selected metadata fields from a DICOM dataset expo
 
 The script also converts DICOM files to use the `.dcm` extension to ensure compatibility with systems or tools that expect this file format.
 
-Developed as part of a technical project for Insight RSA.
-
+Developed as part of an internship project in collaboration with Insight RSA.
 ---
 
 ## Intended Use
@@ -23,18 +22,10 @@ This script is **not intended to serve as a fully compliant medical data anonymi
 ---
 
 ## Important Disclaimer
-While the script removes several patient-identifying metadata fields, the resulting dataset should be considered **anonymized only for demonstration or development purposes**.
+This project was developed as part of an internship and is shared for demonstration purposes only.  
+It is not intended for clinical or production use.
 
-For datasets intended for:
-
-- Public release
-- Clinical research
-- Regulatory environments
-- Compliance with privacy standards (e.g., HIPAA, GDPR)
-
-Additional anonymization procedures and validation steps would be required.
-
-This script should therefore **not be relied upon as a complete or production-grade anonymization solution**.
+While the script removes commonly identifiable metadata fields, it does not guarantee full compliance with medical data privacy regulations (e.g., HIPAA or equivalent standards).
 
 ---
 
@@ -75,10 +66,12 @@ pip install pydicom
 Run the script and provide the requested directories:
 
 ```bash
-python anonymize_dicom.py
+python anonymizeDCM.py
 ```
 
-You will be prompted for:
+Alternatively, you can also run the .exe file in the `/dist` folder.
+
+Either way, You will be prompted for:
 - The source dataset directory
 - The destination directory for the anonymized dataset
 - The name of the output folder
