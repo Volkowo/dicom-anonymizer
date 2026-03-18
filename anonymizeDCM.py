@@ -43,14 +43,23 @@ def getPaths():
 
 # Copies the entire dataset from the source directory to the destination directory
 def copyFiles(sourceDir, destinationDir):
-    # Copy source if destination hasn't exist yet
-    if not os.path.exists(destinationDir):
-        shutil.copytree(sourceDir, destinationDir)
-        return True
-    # print an error if the destiantion already exists
-    else:
+    sourceDICOM = os.path.join(sourceDir, "DICOM")
+    destinationDICOM = os.path.join(destinationDir, "DICOM")
+
+    if not os.path.exists(sourceDICOM):
+        print("Source DICOM folder not found.")
+        return False
+
+    if os.path.exists(destinationDir):
         print("Destination folder already exists. Please choose another one.")
         return False
+    
+    print("\nCopying DICOM folder... This may take a while.")
+    print("Please do not close this window or interrupt the process.\n")
+
+    os.makedirs(destinationDir)
+    shutil.copytree(sourceDICOM, destinationDICOM)
+    return True
 
 # Walks through all files inside the DICOM folder and anonymizes metadata
 def anonymizeFile(dicomFolderDir):
@@ -62,7 +71,7 @@ def anonymizeFile(dicomFolderDir):
             try:
                 ds = pydicom.dcmread(fullDir)
             except pydicom.errors.InvalidDicomError:
-                print(f"{fullDir} is not a valid path!")
+                print(f"{fullDir} is not a valid DICOM file!")
                 continue
         
             # Anonymizes the value that are in the anonymizeKeyword array
@@ -92,6 +101,14 @@ def main():
     
     # Get the directory for DICOM file
     dicDir = os.path.join(destination, "DICOM")
+
+    print("DICOM folder copied successfully.")
+    print("\nAnonymizing DICOM files... This may take a while.")
+    print("Please do not close this window or interrupt the process.\n")
+
     anonymizeFile(dicDir)
+
+    print("Anonymization complete.")
+    print(f"Anonymized files saved in: {destination}")
 
 main();
