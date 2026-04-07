@@ -26,7 +26,6 @@ anonymizeKeyword = [
     "SeriesTime",
     "AcquisitionTime",
     "StudyDescription",
-    "SeriesDescription",
     "ProtocolName",
     "PerformedProcedureStepID",
     "PerformedProcedureStepDescription",
