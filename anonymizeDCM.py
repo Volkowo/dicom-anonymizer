@@ -2,6 +2,7 @@ import pydicom
 import os
 import shutil
 from pydicom.uid import generate_uid
+from pydicom.errors import InvalidDicomError
 
 # List of "variables" in a DICOM file that should be anonymized
 anonymizeKeyword = [
@@ -69,7 +70,7 @@ def anonymizeFile(dicomFolderDir):
             # Checks if the directory is valid or not
             try:
                 ds = pydicom.dcmread(fullDir)
-            except pydicom.errors.InvalidDicomError:
+            except InvalidDicomError:
                 print(f"{fullDir} is not a valid DICOM file!")
                 continue
         
